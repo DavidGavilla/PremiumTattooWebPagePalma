@@ -1,0 +1,286 @@
+/* ---------- Works ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--paper);
+  font: 500 0.92rem/1 var(--font-body);
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.chip:hover {
+  border-color: var(--paper);
+  background: var(--ink-3);
+}
+
+/* Active filter: accent fill plus a check mark, so the state does not rely on colour alone. */
+.chip[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.chip[aria-pressed='true']::before {
+  content: '✓';
+  font-size: 0.85em;
+}
+
+/* Fixed 4:5 tiles: every row closes cleanly, the section height is known before
+   any image loads (no CLS) and short filter results are centred. The full,
+   uncropped photo opens in the lightbox. */
+.works__grid {
+  --cols: 2;
+  --gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3) var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 700px) {
+  .works__grid {
+    --cols: 3;
+    --gap: 20px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .works__grid {
+    --cols: 4;
+    --gap: 24px;
+  }
+}
+
+.work {
+  display: flex;
+  flex-direction: column;
+  width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+  min-width: 0;
+}
+
+.work[hidden] {
+  display: none;
+}
+
+.works__show-more {
+  display: none;
+}
+
+/* Mobile: first six pieces, the rest behind "show more" (only for the full list). */
+@media (max-width: 699px) {
+  .works__grid[data-active-filter='all']:not([data-expanded]) > [data-extra] {
+    display: none;
+  }
+
+  .works__show-more {
+    display: inline-flex;
+  }
+
+  .works__show-more[hidden],
+  .works:has([data-active-filter]:not([data-active-filter='all'])) .works__show-more {
+    display: none;
+  }
+}
+
+.work__open {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  background: var(--ink-2);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.work__open img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .work__open:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* Title first, artist underneath: same structure for every piece. */
+.work__caption {
+  display: grid;
+  gap: 0.1rem;
+  padding-top: 0.65rem;
+  line-height: 1.35;
+}
+
+.work__title {
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.work__credit {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.works__empty {
+  color: var(--muted);
+  text-align: center;
+}
+
+.works__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+}
+
+/* View-transition timing for filter / show-more changes. */
+::view-transition-group(*) {
+  animation-duration: 0.35s;
+  animation-timing-function: var(--ease-out);
+}
+
+/* ---------- Lightbox ---------- */
+.lightbox {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgb(10 9 8 / 0.97);
+  color: var(--paper);
+  overscroll-behavior: contain;
+}
+
+.lightbox::backdrop {
+  background: rgb(10 9 8 / 0.9);
+}
+
+.lightbox[open] {
+  animation: fade 0.35s var(--ease-out);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.lightbox__frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 64px 16px 24px;
+}
+
+.lightbox__figure {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  margin: 0;
+  max-width: min(1100px, 100%);
+}
+
+.lightbox__media img {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100dvh - 190px);
+  object-fit: contain;
+}
+
+.lightbox__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  text-align: center;
+}
+
+.lightbox__credit {
+  color: var(--muted);
+}
+
+.lightbox__close,
+.lightbox__nav {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--ink-2);
+  color: var(--paper);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease-out);
+}
+
+.lightbox__close:hover,
+.lightbox__nav:hover {
+  border-color: var(--paper);
+}
+
+.lightbox__nav[hidden] {
+  display: none;
+}
+
+.lightbox__close {
+  top: 12px;
+  right: 12px;
+}
+
+.lightbox__nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__nav--prev {
+  left: 12px;
+}
+
+.lightbox__nav--next {
+  right: 12px;
+}
+
+@media (max-width: 699px) {
+  .lightbox__nav {
+    top: auto;
+    bottom: 16px;
+    transform: none;
+  }
+
+  .lightbox__frame {
+    padding-bottom: 84px;
+  }
+
+  .lightbox__media img {
+    max-height: calc(100dvh - 240px);
+  }
+}

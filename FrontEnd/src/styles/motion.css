@@ -1,0 +1,35 @@
+/* ---------- Scroll reveal ----------
+   Content is always visible. Where scroll-driven animations are supported and
+   the user has not asked for reduced motion, blocks ease in as they enter the
+   viewport. Progress is tied to scroll position, so anchor jumps, deep links
+   and screenshots always see the finished (visible) state. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal] {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+/* Transform only: text is never painted faded, so contrast holds mid-animation. */
+@keyframes reveal {
+  from {
+    transform: translateY(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

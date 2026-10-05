@@ -1,0 +1,10 @@
+/* Premium Tattoo: design tokens and layout. See ../DESIGN.md for the rationale. */
+
+/* Entry stylesheet: modules in cascade order. Tokens live in styles/base.css. */
+@import './styles/base.css';
+@import './styles/header.css';
+@import './styles/hero.css';
+@import './styles/works.css';
+@import './styles/sections.css';
+@import './styles/footer.css';
+@import './styles/motion.css';

@@ -1,0 +1,169 @@
+/* ---------- Layout ---------- */
+.section {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--space-section) var(--gutter) 0;
+  /* Anchor jumps land the section title 24px under the fixed header instead of
+     leaving the whole top padding visible. Combines with html scroll-padding. */
+  scroll-margin-top: calc(var(--space-3) - var(--space-section));
+}
+
+.section__head {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 62ch;
+  margin-bottom: var(--space-4);
+}
+
+.section__title {
+  font-size: var(--step-3);
+}
+
+.section__intro {
+  color: var(--muted);
+  font-size: var(--step-1);
+  line-height: 1.45;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  display: grid;
+  min-height: min(100svh, 880px);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: end;
+  gap: var(--space-3);
+  padding: calc(var(--header-h) + var(--space-4)) var(--gutter) var(--space-4);
+}
+
+.hero__title {
+  max-width: 16ch;
+  font-size: var(--step-4);
+}
+
+.hero__sub {
+  max-width: 44ch;
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+  font-size: var(--step-1);
+  line-height: 1.45;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero__media {
+  margin: 0;
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+/* Solid backing so the credit stays legible over any part of the photo. */
+.hero__media figcaption {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--space-2);
+  z-index: 1;
+  padding: 0.3rem 0.7rem;
+  background: rgb(14 13 12 / 0.88);
+  color: var(--paper);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Transform-only entrance: the LCP image and headline are painted at full
+   opacity from the first frame. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__media img {
+    animation: hero-in 1.2s var(--ease-out) both;
+  }
+
+  .hero__copy > * {
+    animation: rise 0.8s var(--ease-out) both;
+  }
+
+  .hero__copy > :nth-child(2) { animation-delay: 60ms; }
+  .hero__copy > :nth-child(3) { animation-delay: 120ms; }
+  .hero__copy > :nth-child(4) { animation-delay: 180ms; }
+}
+
+@keyframes hero-in {
+  from {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(16px);
+  }
+}
+
+@media (max-width: 899px) {
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(14 13 12 / 0.55) 0%, rgb(14 13 12 / 0.15) 30%, rgb(14 13 12 / 0.8) 62%, var(--ink) 100%);
+  }
+
+  .hero__media figcaption {
+    right: var(--gutter);
+    bottom: 0.6rem;
+    padding: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    align-items: stretch;
+  }
+
+  /* Equal space above and below the copy (the header counts as part of the top). */
+  .hero__copy {
+    align-content: center;
+    gap: var(--space-4);
+    padding-top: calc(var(--header-h) + var(--space-3));
+    padding-bottom: var(--space-4);
+  }
+
+  .hero__title {
+    max-width: none;
+  }
+
+  .hero__media {
+    position: relative;
+    overflow: hidden;
+    margin-right: calc(-1 * max(0px, (100vw - var(--max)) / 2));
+  }
+
+  .hero__media img {
+    position: absolute;
+    inset: 0;
+  }
+}
